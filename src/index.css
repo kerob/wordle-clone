@@ -1,13 +1,361 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* End reset */
+:root {
+  --game-max-width: 500px;
+  --header-height: 50px;
+
+  /*Colors*/
+  --clr-black: black;
+  --clr-neutral: #808080;
+  --clr-absent: #3a3a3c;
+  --clr-inWord: #b59f3b;
+  --clr-inPlace: #538d4e;
+  --clr-text: white;
+
+  --shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+
+  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+
+}
+
+body {
+  background-color: black;
+  /* color: var(--clr-text); */
+}
+
+/*Navbar*/
+.navbar {
+  display: flex;
+  background-color: var(--clr-absent);
+  height: 3.25rem;
+  align-items: center;
+  color: var(--clr-text);
+
+  text-align: center;
+}
+
+.nav__container {
+  display: flex;
+  justify-content: center;
+  margin: 0 5%;
+  padding: .5rem 0;
+  /* position: relative;
+  height: auto; */
+  overflow: hidden;
+  width: 100%;
+  font-weight: 700;
+  font-size: 37px;
+  font-family: 'nyt-karnakcondensed';
+  line-height: 100%;
+  letter-spacing: 0.01em;
+
+}
+
+.content-container {
+  /* max-width: 750px;
+  width: 70%;
+  margin: 0 auto; */
+  width: 100%;
+  max-width: var(--game-max-width);
+  margin: 0 auto;
+  height: calc(100% - var(--header-height));
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Answer board */
+.answer_board {
+  /* border: 5px solid greenyellow; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  overflow: hidden;
+  padding: 50px 0;
+}
+
+.row {
+  /* padding-left: 20%; */
+  display: flex;
+  justify-content: left;
+  gap: 2em;
+  /* margin-block-start: 20vh;
+  margin-block-end: 20vh; */
+}
+
+.grid {
+  /* display: grid;
+  grid-template-columns: repeat(5, 100px);
+  grid-template-rows: repeat(6, 100px);
+  place-content: center; */
+
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  grid-gap: 5px;
+  padding: 10px;
+  box-sizing: border-box;
+
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 5px;
+}
+
+.center {
+  margin-inline-end: auto;
+  margin-inline-start: auto;
+}
+
+.answer {
+  position: relative;
+  top: 250px;
+}
+
+.letter {
+  --border-size: 3px;
+  --text-color: var(--clr-text);
+  border: var(--border-size) solid var(--clr-text);
+  text-transform: uppercase;
+  font-size: 2.5em;
+  background-color: var(--clr-black);
+  color: var(--text-color);
+  height: 75px;
+  width: 75px;
+  display: grid;
+  place-items: center;
+  margin: auto;
+}
+
+.inPlace {
+  --clr-checked: var(--clr-inPlace);
+  animation: tile-flip 0.25s ease-in forwards;
+}
+
+.inWord {
+  --clr-checked: var(--clr-inWord);
+  animation: tile-flip 0.25s ease-in forwards;
+}
+
+.noMatch {
+  --clr-checked: var(--clr-neutral);
+  animation: tile-flip 0.25s ease-in forwards;
+}
+
+.filled {
+  background-color: var(--clr-neutral);
+  animation: pop-up 0.15s forwards;
+}
+
+.blank {
+  border: 2px solid var(--clr-absent);
+  background-color: black;
+  height: 75px;
+  width: 75px;
+}
+
+.keyboard {
+  /* border: 5px solid red; */
+  /* display: grid;
+  place-content: center; */
+  margin: 0 8px;
+  user-select: none;
+
+}
+
+.keyboard-row {
+  /* display: flex;
+  justify-content: space-between;
+  padding: 1em 0;
+  gap: 1em; */
+  display: flex;
+  width: 100%;
+  margin: 0 auto 8px;
+  touch-action: manipulation;
+}
+
+.key {
+  --clr-key: gray;
+  text-transform: uppercase;
+  background-color: var(--clr-key);
+  color: white;
+  /* height: 55px;
+  width: 55px;
+  display: grid;
+  place-items: center; */
+  font-family: inherit;
+  font-weight: bold;
+  border: 0;
+  padding: 0;
+  margin: 0 6px 0 0;
+  height: 58px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  /* background-color: var(--key-bg);
+  color: var(--key-text-color); */
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+
+}
+
+.key-large {
+  flex: 1.5;
+  font-size: 12px;
+}
+
+.inPlace-key {
+  --clr-key: var(--clr-inPlace);
+}
+
+.inWord-key {
+  --clr-key: var(--clr-inWord);
+}
+
+.noMatch-key {
+  --clr-key: var(--clr-absent);
+
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  color: white;
+}
+
+.modal-message {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 100px;
+  margin: 35vh auto;
+  max-width: 500px;
+  background-color: var(--clr-absent);
+  box-shadow: var(--shadow);
+}
+
+/* Animations */
+@keyframes tile-flip {
+  from {
+    transform: rotateX(0);
+    background-color: var(--clr-black);
+    --text-color: var(--clr-black);
+  }
+
+  40% {
+    transform: rotateX(90deg);
+    background-color: var(--clr-black);
+    --text-color: var(--clr-black);
+  }
+
+  60% {
+    transform: rotateX(90deg);
+    background-color: var(--clr-checked);
+    --text-color: var(--clr-text);
+  }
+
+  to {
+    transform: rotateX(0);
+    background-color: var(--clr-checked);
+    --text-color: var(--clr-text);
+  }
+}
+
+@keyframes pop-up {
+  0% {
+    height: 45px;
+    width: 45px;
+  }
+
+  100% {
+    height: 75px;
+    width: 75px;
+  }
 }
