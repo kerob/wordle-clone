@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Keyboard from "./components/Keyboard";
 import Modal from "./components/Modal";
+import { useNotification } from "./components/Notifications/NotificationProvider";
 
 let wordList = require("./data/wordlist.json");
 
@@ -43,23 +44,21 @@ export default function Input() {
     playerWon: false,
   });
   const [showModal, setShowModal] = useState(false);
-  const [alphaStatus, setAlphaStatus] = useState(alphabet);
 
-  /*
-    result = {
-      id: some number,
-      letters: [
-        {
-          value: "letter",
-          inWord: false,
-          inPlace: false
-        }
-      ]
-    }
-  */
-  // function handleResults(entry) {
-  //   const newResults = [...results, {}];
-  // }
+  // const [message, setMessage] = useState("");
+  const [alphaStatus, setAlphaStatus] = useState(alphabet);
+  const dispatch = useNotification();
+
+  const handleNewNotification = useCallback(
+    (message) => {
+      dispatch({
+        type: "ERROR",
+        message: message,
+        title: "Successful Request",
+      });
+    },
+    [dispatch]
+  );
 
   function inWordBank(guess) {
     let inList = wordList.filter((word) => {
@@ -141,9 +140,14 @@ export default function Input() {
             console.log("Game Over");
           }
         } else {
-          alert("Not in Word List");
+          // alert("Not in Word List");
+          handleNewNotification("Not in Word List");
         }
         //check if correct
+      }
+
+      if (value.match("Enter") && output.length < 5) {
+        handleNewNotification("Not Enough Letters");
       }
       if (value.match(checkIsLetter) && output.length < 5) {
         setOutput((prevOutput) => {
@@ -151,7 +155,7 @@ export default function Input() {
         });
       }
     },
-    [output, solution, turn, gameStatus, alphaStatus]
+    [output, solution, turn, gameStatus, alphaStatus, handleNewNotification]
   );
 
   function handleOnClick(value) {
@@ -250,6 +254,9 @@ export default function Input() {
           solution={solution.value}
         />
       )}
+      {/* {showNotification.visible && ( */}
+      {/* <Notification message={showNotification.message} /> */}
+      {/* )} */}
     </div>
   );
 }
