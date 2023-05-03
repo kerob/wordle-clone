@@ -78,6 +78,8 @@ select {
   --game-max-width: 500px;
   --header-height: 50px;
   --notification-size: 175px;
+  --letter-size: 45px;
+  --fs-letter: 1.25em;
 
   /*Colors*/
   --clr-black: black;
@@ -92,6 +94,13 @@ select {
   font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
 
+}
+
+@media (min-width: 25em) {
+  :root {
+    --letter-size: 75px;
+    --fs-letter: 2.5em;
+  }
 }
 
 body {
@@ -195,11 +204,11 @@ body {
   --text-color: var(--clr-text);
   border: var(--border-size) solid var(--clr-text);
   text-transform: uppercase;
-  font-size: 2.5em;
+  font-size: var(--fs-letter);
   background-color: var(--clr-black);
   color: var(--text-color);
-  height: 75px;
-  width: 75px;
+  height: var(--letter-size);
+  width: var(--letter-size);
   display: grid;
   place-items: center;
   margin: auto;
@@ -228,8 +237,8 @@ body {
 .blank {
   border: 2px solid var(--clr-absent);
   background-color: black;
-  height: 75px;
-  width: 75px;
+  height: var(--letter-size);
+  width: var(--letter-size);
 }
 
 .keyboard {
@@ -434,12 +443,12 @@ body {
 
 @keyframes pop-up {
   0% {
-    height: 45px;
-    width: 45px;
+    height: calc(var(--letter-size) - 20px);
+    width: calc(var(--letter-size) - 20px);
   }
 
   100% {
-    height: 75px;
-    width: 75px;
+    height: var(--letter-size);
+    width: var(--letter-size);
   }
 }
